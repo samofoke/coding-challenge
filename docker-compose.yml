@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  backend:
+    build:
+      context: ./backend
+      args:
+        - NODE_ENV=${NODE_ENV}
+    ports:
+      - "5003:5003"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
