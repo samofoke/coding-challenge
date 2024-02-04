@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+const dbConnection = require("./database/mongodb");
 
 const app = express();
 
@@ -8,7 +9,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-//test route
+// Initialize database connection
+dbConnection();
+
+// test route
 app.get("/", (req, res) => {
   res.send("The NFT marketplace back end...");
 });
