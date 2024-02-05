@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+const routes = require("./routes/index");
+const dbConnection = require("./database/mongodb");
 
 const app = express();
 
@@ -8,10 +10,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-//test route
-app.get("/", (req, res) => {
-  res.send("The NFT marketplace back end...");
-});
+// routes
+app.use("/api/v1", routes);
+
+// Initialize database connection
+dbConnection();
 
 // Starting the server
 const PORT = process.env.PORT || 5003;

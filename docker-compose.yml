@@ -9,6 +9,8 @@ services:
       - "5003:5003"
     environment:
       - NODE_ENV=${NODE_ENV}
+      - MONGO_DB=${MONGO_DB}
+      - JWT_SECRET=${JWT_SECRET}
     volumes:
       - ./backend:/app
       - /app/node_modules

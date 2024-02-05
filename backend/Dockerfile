@@ -4,10 +4,6 @@ FROM node:18.19-alpine
 # Set theworking directory in the container to /app
 WORKDIR /app
 
-# Argument for environment (defaults to production)
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
-
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
