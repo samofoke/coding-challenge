@@ -3,7 +3,7 @@ const User = require("../models/User");
 
 const authenticateToken = async (req, res, next) => {
   try {
-    const token = req.header("Authorization").replace("Bearer", "");
+    const token = req.header("Authorization").replace("Bearer", "").trim();
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId);
 
@@ -14,7 +14,9 @@ const authenticateToken = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    res.status(401).send({ message: "Unauthorized: token invalid." });
+    res
+      .status(401)
+      .send({ message: "Unauthorized: token invalid.", error: error.message });
   }
 };
 

@@ -4,11 +4,11 @@ const nftSchema = require("./nftSchema");
 const userProfileSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
+    ref: "User",
     require: true,
   },
-  name: String,
-  surname: String,
+  firstName: String,
+  lastName: String,
   bio: String,
   website: String,
   nftCollection: [nftSchema],
