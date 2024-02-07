@@ -19,6 +19,7 @@ import myAvatar from "../../images/avatar2.png";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./navbar.css";
 import { Link, Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -27,12 +28,22 @@ const NavBar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
+  const navigate = useNavigate();
+
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
+
   const menuItem = [
     { label: "Explore", path: "/explore" },
     { label: "Market", path: "/market" },
   ];
 
-  const userSettings = ["Profile", "Login", "Market", "Logout"];
+  const userSettings = [
+    { label: "Profile", path: "/profile" },
+    { label: "Login", path: "/sign" },
+    { label: "Logout", path: "/logout" },
+  ];
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
@@ -135,9 +146,15 @@ const NavBar = () => {
               },
             }}
           >
-            {userSettings.map((items) => (
-              <MenuItem key={items} onClick={handleMenuClose}>
-                <Typography textAlign="center">{items}</Typography>
+            {userSettings.map((item) => (
+              <MenuItem
+                key={item.label}
+                onClick={() => {
+                  handleNavigation(item.path);
+                  handleMenuClose();
+                }}
+              >
+                <Typography textAlign="center">{item.label}</Typography>
               </MenuItem>
             ))}
           </Menu>
