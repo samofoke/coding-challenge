@@ -40,6 +40,24 @@ const userProfileController = {
         .send({ message: "Error creating user profile", error: error.message });
     }
   },
+
+  async getUserProfile(req, res) {
+    try {
+      const { userId } = req.params;
+      const userProfile = await UserProfile.findOne({ user: userId }).populate(
+        "user"
+      );
+      if (!userProfile) {
+        return res.status(404).send({ message: "Profile not found." });
+      }
+      console.log("user profile: ", userProfile);
+      res.status(200).send(userProfile);
+    } catch (error) {
+      res
+        .status(500)
+        .send({ message: "Error fetching profile.", error: error.message });
+    }
+  },
 };
 
 module.exports = userProfileController;

@@ -9,4 +9,10 @@ router.post(
   UserProfileController.createProfile
 );
 
+router.get(
+  "/user-profile/:userId",
+  authenticateToken,
+  UserProfileController.getUserProfile
+);
+
 module.exports = router;
