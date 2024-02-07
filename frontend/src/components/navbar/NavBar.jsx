@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import {
   AppBar,
   Toolbar,
@@ -17,8 +17,8 @@ import {
 } from "@mui/material";
 import myAvatar from "../../images/avatar2.png";
 import MenuIcon from "@mui/icons-material/Menu";
-// import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Link } from "react-router-dom";
+import "./navbar.css";
+import { Link, Outlet } from "react-router-dom";
 
 const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -28,12 +28,11 @@ const NavBar = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const menuItem = [
-    { label: "Landing Page", path: "/" },
     { label: "Explore", path: "/explore" },
-    { label: "Market Place", path: "/market" },
+    { label: "Market", path: "/market" },
   ];
 
-  const userSettings = ["Profile", "Login", "Market Place", "Logout"];
+  const userSettings = ["Profile", "Login", "Market", "Logout"];
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
@@ -51,6 +50,7 @@ const NavBar = () => {
     <Link
       to={item.path}
       key={item.label}
+      className="menu-item"
       style={{ textDecoration: "none", color: "inherit", margin: "0 10px" }}
     >
       <Typography variant="button">{item.label}</Typography>
@@ -70,62 +70,84 @@ const NavBar = () => {
   );
 
   return (
-    <AppBar
-      position="fixed"
-      elevation={0}
-      sx={{ backgroundColor: "#121111", color: "#FEFCF3" }}
-    >
-      <Toolbar>
-        {isMobile && (
-          <IconButton
-            edge="start"
-            aria-label="menu"
-            onClick={handleDrawerToggle}
-            sx={{ position: "absolute", left: 0, color: "white" }}
-          >
-            <MenuIcon />
-          </IconButton>
-        )}
-
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexGrow: 1,
-          }}
-        >
+    <Fragment>
+      <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{
+          backgroundColor: "transparent",
+          color: "#FEFCF3",
+          transition: "all 0.3s ease",
+          "&:hover": {
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
+          },
+          [theme.breakpoints.up("md")]: {
+            ".MuiToolbar-root": {
+              paddingLeft: "108px",
+              paddingRight: "294px",
+            },
+          },
+        }}
+      >
+        <Toolbar sx={{ justifyContent: "center" }}>
           {isMobile ? (
-            <Typography variant="h6" sx={{ textAlign: "center" }}>
+            <IconButton
+              edge="start"
+              aria-label="menu"
+              onClick={handleDrawerToggle}
+              sx={{ color: "white" }}
+            >
+              <MenuIcon />
+            </IconButton>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexGrow: 1,
+              }}
+            >
+              {menuItem.map(renderLinks)}
+            </Box>
+          )}
+
+          {isMobile && (
+            <Typography variant="h6" sx={{ flexGrow: 1, textAlign: "center" }}>
               Logo
             </Typography>
-          ) : (
-            menuItem.map(renderLinks)
           )}
-        </Box>
 
-        <IconButton
-          onClick={handleAvatarClick}
-          sx={{
-            position: isMobile ? "absolute" : "static",
-            right: 0,
-            color: "black",
-          }}
-        >
-          <Avatar alt="profile" src={myAvatar} />
-        </IconButton>
-        <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
-          {userSettings.map((items) => (
-            <MenuItem key={items} onClick={handleMenuClose}>
-              <Typography textAlign="center">{items}</Typography>
-            </MenuItem>
-          ))}
-        </Menu>
-      </Toolbar>
-      <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerToggle}>
-        {drawer}
-      </Drawer>
-    </AppBar>
+          <IconButton onClick={handleAvatarClick} sx={{ color: "black" }}>
+            <Avatar alt="profile" src={myAvatar} />
+          </IconButton>
+
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleMenuClose}
+            slotProps={{
+              paper: {
+                sx: {
+                  bgcolor: "#0e0e0e",
+                  color: "white",
+                },
+              },
+            }}
+          >
+            {userSettings.map((items) => (
+              <MenuItem key={items} onClick={handleMenuClose}>
+                <Typography textAlign="center">{items}</Typography>
+              </MenuItem>
+            ))}
+          </Menu>
+        </Toolbar>
+        <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerToggle}>
+          {drawer}
+        </Drawer>
+      </AppBar>
+      <Outlet />
+    </Fragment>
   );
 };
 
