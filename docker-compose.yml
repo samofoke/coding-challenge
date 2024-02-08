@@ -12,9 +12,11 @@ services:
       - MONGO_DB=${MONGO_DB}
       - JWT_SECRET=${JWT_SECRET}
     volumes:
-      - ./backend:/app
+      - ./backend/src:/app/src
       - /app/node_modules
   frontend:
     build: ./frontend
     ports:
       - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=${REACT_APP_API_URL}
