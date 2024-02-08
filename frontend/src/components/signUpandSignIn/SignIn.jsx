@@ -3,12 +3,21 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Box, Button, Typography, Container } from "@mui/material";
 import DynamicTextField from "../TextField.jsx/TextFieldComponent";
+import CustomLoader from "../customComponents/LoaderComponent";
+import CustomPopup from "../customComponents/PopupComponent";
+import CustomButton from "../customComponents/CustomButton";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [successPopup, setSuccessPopup] = useState({
+    open: false,
+    content: "",
+  });
+  const [errorPopup, setErrorPopup] = useState({ open: false, content: "" });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,22 +25,54 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/user/login`,
         formData
       );
-      console.log(response.data);
+      console.log(response);
+      setSuccessPopup({ open: true, content: response.data.message });
+
+      //reset the form
+      setFormData({ email: "", password: "" });
     } catch (error) {
-      console.error(
-        "Login error",
-        error.response ? error.response.data : error
-      );
+      setErrorPopup({
+        open: true,
+        content: error.response
+          ? error.response.data.message
+          : "Login user failed",
+      });
+    } finally {
+      setFormData({ email: "", password: "" });
+      setLoading(false);
     }
+  };
+
+  const closeSuccessPopup = () => {
+    setSuccessPopup({ ...successPopup, open: false });
+  };
+
+  const closeErrorPopup = () => {
+    setErrorPopup({ ...errorPopup, open: false });
   };
 
   return (
     <Container component="main" maxWidth="xs">
+      <CustomLoader loading={loading} />
+      <CustomPopup
+        open={successPopup.open}
+        type="success"
+        content={successPopup.content}
+        onClose={closeSuccessPopup}
+      />
+      <CustomPopup
+        open={errorPopup.open}
+        type="error"
+        content={errorPopup.content}
+        onClose={closeErrorPopup}
+      />
+
       <Box
         sx={{
           marginTop: 8,
@@ -59,14 +100,14 @@ const SignIn = () => {
             value={formData.password}
             onChange={handleChange}
           />
-          <Button
+          <CustomButton
             type="submit"
             fullWidth
-            variant="contained"
+            variant="outlined"
             sx={{ mt: 3, mb: 2 }}
           >
             Sign In
-          </Button>
+          </CustomButton>
         </Box>
       </Box>
     </Container>
