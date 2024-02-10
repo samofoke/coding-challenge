@@ -1,11 +1,13 @@
 // SignIn.jsx
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { Box, Typography, Container } from "@mui/material";
 import DynamicTextField from "../TextField.jsx/TextFieldComponent";
 import CustomLoader from "../customComponents/LoaderComponent";
 import CustomPopup from "../customComponents/PopupComponent";
 import CustomButton from "../customComponents/CustomButton";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthUseContext";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +21,9 @@ const SignIn = () => {
   });
   const [errorPopup, setErrorPopup] = useState({ open: false, content: "" });
 
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -31,10 +36,11 @@ const SignIn = () => {
         `${process.env.REACT_APP_API_URL}/user/login`,
         formData
       );
-      console.log(response);
 
       if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
+        login(response.data.user, response.data.token);
+        console.log("user id: ", response.data.user._id);
+        navigate(`/user-profile/${response.data.user._id}`);
       }
 
       setSuccessPopup({ open: true, content: response.data.message });
