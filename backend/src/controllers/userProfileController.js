@@ -32,7 +32,7 @@ const userProfileController = {
       });
 
       await userProfile.save();
-      console.log("created user profile: ", userProfile);
+
       res.status(201).send(userProfile);
     } catch (error) {
       res
@@ -50,7 +50,6 @@ const userProfileController = {
       if (!userProfile) {
         return res.status(404).send({ message: "Profile not found." });
       }
-      console.log("user profile: ", userProfile);
       res.status(200).send(userProfile);
     } catch (error) {
       res

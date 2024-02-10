@@ -40,7 +40,7 @@ const SignIn = () => {
       if (response.data.token) {
         login(response.data.user, response.data.token);
         console.log("user id: ", response.data.user._id);
-        navigate(`/user-profile/${response.data.user._id}`);
+        navigate(`/profile/${response.data.user._id}`);
       }
 
       setSuccessPopup({ open: true, content: response.data.message });
