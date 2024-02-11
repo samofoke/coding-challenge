@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useContext } from "react";
 import {
   AppBar,
   Toolbar,
@@ -18,8 +18,8 @@ import {
 import myAvatar from "../../images/avatar2.png";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./navbar.css";
-import { Link, Outlet } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthUseContext";
 
 const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -28,10 +28,16 @@ const NavBar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
+  const { user } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const handleNavigation = (path) => {
-    navigate(path);
+    if (path.includes(":userId") && user) {
+      navigate(path.replace(":userId", user?._id));
+    } else {
+      navigate(path);
+    }
   };
 
   const menuItem = [
@@ -40,7 +46,7 @@ const NavBar = () => {
   ];
 
   const userSettings = [
-    { label: "Profile", path: "/profile" },
+    { label: "Profile", path: "/profile/:userId" },
     { label: "Login", path: "/sign" },
     { label: "Logout", path: "/logout" },
   ];

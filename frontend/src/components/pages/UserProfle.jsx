@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-// import {
-//   Box,
-//   Container,
-//   Typography,
-//   List,
-//   ListItem,
-//   ListItemText,
-// } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../context/AuthUseContext";
@@ -21,8 +21,8 @@ const UserProfileView = () => {
   const { userId } = useParams();
   const { token } = useContext(AuthContext);
 
-  console.log("get user: ", userId);
-  console.log("The token: ", token);
+  // console.log("get user: ", userId);
+  // console.log("The token: ", token);
 
   useEffect(() => {
     if (!userId || !token) {
@@ -59,8 +59,54 @@ const UserProfileView = () => {
   }, [userId, token]);
 
   if (loading) {
-    <CustomLoader loading={loading} />;
+    return <CustomLoader loading={loading} />;
   }
+
+  if (!profileData) {
+    return <Typography>No profile data available</Typography>;
+  }
+
+  if (error) {
+    return <Typography color="error">{error}</Typography>;
+  }
+
+  console.log("profile data: ", profileData.nftCollection);
+
+  return (
+    <Container component="main" maxWidth="sm">
+      <Box
+        sx={{
+          marginTop: 12,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h5">User Profile</Typography>
+        <List sx={{ width: "100%" }}>
+          <ListItem>
+            <ListItemText
+              primary="First Name"
+              secondary={profileData.firstName}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary="Last Name"
+              secondary={profileData.lastName}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="Bio" secondary={profileData.bio} />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="Website" secondary={profileData.website} />
+          </ListItem>
+          {}
+        </List>
+      </Box>
+    </Container>
+  );
 };
 
 export default UserProfileView;
