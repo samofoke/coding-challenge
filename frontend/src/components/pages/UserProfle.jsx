@@ -1,6 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
+  Card,
+  CardMedia,
+  CardContent,
   Container,
   Typography,
   List,
@@ -102,7 +105,40 @@ const UserProfileView = () => {
           <ListItem>
             <ListItemText primary="Website" secondary={profileData.website} />
           </ListItem>
-          {}
+          {profileData.nftCollection &&
+            profileData.nftCollection.length > 0 && (
+              <>
+                <ListItem>
+                  <Typography variant="h6">NFT Collection</Typography>
+                </ListItem>
+                {profileData.nftCollection.map((nft) => (
+                  <ListItem key={nft._id}>
+                    <Card sx={{ display: "flex", width: "100%" }}>
+                      <CardMedia
+                        component="img"
+                        sx={{ width: 151 }}
+                        image={nft.image}
+                        alt={nft.title}
+                      />
+                      <Box sx={{ display: "flex", flexDirection: "column" }}>
+                        <CardContent sx={{ flex: "1 0 auto" }}>
+                          <Typography component="div" variant="h6">
+                            {nft.title}
+                          </Typography>
+                          <Typography
+                            variant="subtitle1"
+                            color="text.secondary"
+                            component="div"
+                          >
+                            {nft.description}
+                          </Typography>
+                        </CardContent>
+                      </Box>
+                    </Card>
+                  </ListItem>
+                ))}
+              </>
+            )}
         </List>
       </Box>
     </Container>
