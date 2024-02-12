@@ -15,4 +15,16 @@ router.get(
   UserProfileController.getUserProfile
 );
 
+router.put(
+  "/user-profile/:userId",
+  authenticateToken,
+  UserProfileController.updateProfile
+);
+
+router.delete(
+  "/user-profile/:userId",
+  authenticateToken,
+  UserProfileController.deleteProfile
+);
+
 module.exports = router;

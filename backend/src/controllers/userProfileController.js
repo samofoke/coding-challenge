@@ -57,6 +57,62 @@ const userProfileController = {
         .send({ message: "Error fetching profile.", error: error.message });
     }
   },
+
+  async updateProfile(req, res) {
+    try {
+      const { userId } = req.params;
+      const { firstName, lastName, bio, website, nftCollection, socialLinks } =
+        req.body;
+
+      const existingUser = await User.findById(userId);
+      if (!existingUser) {
+        return res.status(404).send({ message: "User not found" });
+      }
+
+      const updatedProfile = await UserProfile.findOneAndUpdate(
+        { user: userId },
+        {
+          firstName,
+          lastName,
+          bio,
+          website,
+          nftCollection,
+          socialLinks,
+        },
+        { new: true }
+      );
+
+      if (!updatedProfile) {
+        return res.status(404).send({ message: "Profile not found." });
+      }
+
+      // console.log("updated data: ", updatedProfile);
+      res.status(200).send(updatedProfile);
+    } catch (error) {
+      res
+        .status(500)
+        .send({ message: "Error fetching profile.", error: error.message });
+    }
+  },
+
+  async deleteProfile(req, res) {
+    try {
+      const { userId } = req.params;
+      const deletedProfile = await UserProfile.findOneAndDelete({
+        user: userId,
+      });
+
+      if (!deletedProfile) {
+        return res.status(404).send({ message: "Profile not found." });
+      }
+
+      res.status(200).send({ message: "Profile deleted successfully." });
+    } catch (error) {
+      res
+        .status(500)
+        .send({ message: "Error deleting profile.", error: error.message });
+    }
+  },
 };
 
 module.exports = userProfileController;

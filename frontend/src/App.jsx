@@ -6,6 +6,7 @@ import LandingPage from "./components/pages/Landingpage";
 import SignInSignUp from "./components/signUpandSignIn/SignInSignUp";
 import AuthProvider from "./components/context/AuthUseContext";
 import UserProfileView from "./components/pages/UserProfle";
+import CreateUserPrile from "./components/CreateUserProfile/CreateProfile";
 
 function App() {
   return (
@@ -17,6 +18,10 @@ function App() {
             <Route index element={<LandingPage />} />
             <Route path="/sign" element={<SignInSignUp />} />
             <Route path="/profile/:userId" element={<UserProfileView />} />
+            <Route
+              path="/profile/create-profile/:userId"
+              element={<CreateUserPrile />}
+            />
           </Routes>
         </Box>
       </Box>

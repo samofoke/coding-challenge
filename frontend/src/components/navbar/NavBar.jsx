@@ -92,7 +92,7 @@ const NavBar = () => {
         position="fixed"
         elevation={0}
         sx={{
-          backgroundColor: "transparent",
+          backgroundColor: "#423F3E",
           color: "#FEFCF3",
           transition: "all 0.3s ease",
           "&:hover": {
@@ -106,17 +106,32 @@ const NavBar = () => {
           },
         }}
       >
-        <Toolbar sx={{ justifyContent: "center" }}>
-          {isMobile ? (
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          {isMobile && (
             <IconButton
               edge="start"
               aria-label="menu"
               onClick={handleDrawerToggle}
-              sx={{ color: "white" }}
+              sx={{ color: "white", marginRight: "auto" }}
             >
               <MenuIcon />
             </IconButton>
-          ) : (
+          )}
+
+          <Link
+            to="/"
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              flexGrow: isMobile ? 1 : 0,
+            }}
+          >
+            <Typography variant="h6" sx={{ textAlign: "center" }}>
+              Logo
+            </Typography>
+          </Link>
+
+          {!isMobile && (
             <Box
               sx={{
                 display: "flex",
@@ -129,13 +144,10 @@ const NavBar = () => {
             </Box>
           )}
 
-          {isMobile && (
-            <Typography variant="h6" sx={{ flexGrow: 1, textAlign: "center" }}>
-              Logo
-            </Typography>
-          )}
-
-          <IconButton onClick={handleAvatarClick} sx={{ color: "black" }}>
+          <IconButton
+            onClick={handleAvatarClick}
+            sx={{ color: "black", marginLeft: "auto" }}
+          >
             <Avatar alt="profile" src={myAvatar} />
           </IconButton>
 
@@ -143,13 +155,8 @@ const NavBar = () => {
             anchorEl={anchorEl}
             open={open}
             onClose={handleMenuClose}
-            slotProps={{
-              paper: {
-                sx: {
-                  bgcolor: "#0e0e0e",
-                  color: "white",
-                },
-              },
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
             }}
           >
             {userSettings.map((item) => (

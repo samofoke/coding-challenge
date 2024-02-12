@@ -15,11 +15,7 @@ const SignIn = () => {
     password: "",
   });
   const [loading, setLoading] = useState(false);
-  const [successPopup, setSuccessPopup] = useState({
-    open: false,
-    content: "",
-  });
-  const [errorPopup, setErrorPopup] = useState({ open: false, content: "" });
+  const [popup, setPopup] = useState({ open: false, message: "", type: "" });
 
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -39,20 +35,18 @@ const SignIn = () => {
 
       if (response.data.token) {
         login(response.data.user, response.data.token);
-        console.log("user id: ", response.data.user._id);
-        navigate(`/profile/${response.data.user._id}`);
+        setPopup({ open: true, message: "Login successful!", type: "success" });
+        setTimeout(() => {
+          navigate(`/profile/${response.data.user._id}`);
+        }, 3000);
       }
-
-      setSuccessPopup({ open: true, content: response.data.message });
-
       //reset the form
       setFormData({ email: "", password: "" });
     } catch (error) {
-      setErrorPopup({
+      setPopup({
         open: true,
-        content: error.response
-          ? error.response.data.message
-          : "Login user failed",
+        message: error.response ? error.response.data.message : "Login failed",
+        type: "error",
       });
     } finally {
       setFormData({ email: "", password: "" });
@@ -60,28 +54,18 @@ const SignIn = () => {
     }
   };
 
-  const closeSuccessPopup = () => {
-    setSuccessPopup({ ...successPopup, open: false });
-  };
-
-  const closeErrorPopup = () => {
-    setErrorPopup({ ...errorPopup, open: false });
+  const handleClosePopup = () => {
+    setPopup({ ...popup, open: false });
   };
 
   return (
     <Container component="main" maxWidth="xs">
       <CustomLoader loading={loading} />
       <CustomPopup
-        open={successPopup.open}
-        type="success"
-        content={successPopup.content}
-        onClose={closeSuccessPopup}
-      />
-      <CustomPopup
-        open={errorPopup.open}
-        type="error"
-        content={errorPopup.content}
-        onClose={closeErrorPopup}
+        open={popup.open}
+        handleClose={handleClosePopup}
+        severity={popup.type}
+        message={popup.message}
       />
 
       <Box
@@ -114,7 +98,7 @@ const SignIn = () => {
           <CustomButton
             type="submit"
             fullWidth
-            variant="outlined"
+            variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
             Sign In

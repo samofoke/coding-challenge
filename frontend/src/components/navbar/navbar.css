@@ -1,5 +1,5 @@
 .menu-item:hover {
-    color: #ffab2e; 
-    transform: translateY(-2px);
-    transition: all 0.3s ease;
+  color: #ffab2e; 
+  transform: scale(1.05);
+  transition: all 0.3s ease;
   }
