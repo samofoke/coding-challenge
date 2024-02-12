@@ -40,15 +40,18 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).send({ message: "Invalid email and password." });
+      res.status(401).send({ message: "Invalid email and password." });
+      return;
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "24h",
     });
-    res.status(200).send({ message: "Login Successfully.", token, user });
+    return res
+      .status(200)
+      .send({ message: "Login Successfully.", token, user });
   } catch (error) {
-    res
+    return res
       .status(500)
       .send({ message: "Error logging in.", error: error.message });
   }

@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useContext } from "react";
 import {
   AppBar,
   Toolbar,
@@ -18,8 +18,8 @@ import {
 import myAvatar from "../../images/avatar2.png";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./navbar.css";
-import { Link, Outlet } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthUseContext";
 
 const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -28,10 +28,16 @@ const NavBar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
+  const { user } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const handleNavigation = (path) => {
-    navigate(path);
+    if (path.includes(":userId") && user) {
+      navigate(path.replace(":userId", user?._id));
+    } else {
+      navigate(path);
+    }
   };
 
   const menuItem = [
@@ -40,7 +46,7 @@ const NavBar = () => {
   ];
 
   const userSettings = [
-    { label: "Profile", path: "/profile" },
+    { label: "Profile", path: "/profile/:userId" },
     { label: "Login", path: "/sign" },
     { label: "Logout", path: "/logout" },
   ];
@@ -86,7 +92,7 @@ const NavBar = () => {
         position="fixed"
         elevation={0}
         sx={{
-          backgroundColor: "transparent",
+          backgroundColor: "#423F3E",
           color: "#FEFCF3",
           transition: "all 0.3s ease",
           "&:hover": {
@@ -100,17 +106,32 @@ const NavBar = () => {
           },
         }}
       >
-        <Toolbar sx={{ justifyContent: "center" }}>
-          {isMobile ? (
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          {isMobile && (
             <IconButton
               edge="start"
               aria-label="menu"
               onClick={handleDrawerToggle}
-              sx={{ color: "white" }}
+              sx={{ color: "white", marginRight: "auto" }}
             >
               <MenuIcon />
             </IconButton>
-          ) : (
+          )}
+
+          <Link
+            to="/"
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              flexGrow: isMobile ? 1 : 0,
+            }}
+          >
+            <Typography variant="h6" sx={{ textAlign: "center" }}>
+              Logo
+            </Typography>
+          </Link>
+
+          {!isMobile && (
             <Box
               sx={{
                 display: "flex",
@@ -123,13 +144,10 @@ const NavBar = () => {
             </Box>
           )}
 
-          {isMobile && (
-            <Typography variant="h6" sx={{ flexGrow: 1, textAlign: "center" }}>
-              Logo
-            </Typography>
-          )}
-
-          <IconButton onClick={handleAvatarClick} sx={{ color: "black" }}>
+          <IconButton
+            onClick={handleAvatarClick}
+            sx={{ color: "black", marginLeft: "auto" }}
+          >
             <Avatar alt="profile" src={myAvatar} />
           </IconButton>
 
@@ -137,13 +155,8 @@ const NavBar = () => {
             anchorEl={anchorEl}
             open={open}
             onClose={handleMenuClose}
-            slotProps={{
-              paper: {
-                sx: {
-                  bgcolor: "#0e0e0e",
-                  color: "white",
-                },
-              },
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
             }}
           >
             {userSettings.map((item) => (

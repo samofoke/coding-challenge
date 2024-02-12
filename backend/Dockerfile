@@ -1,7 +1,7 @@
 # Use an official Node runtime as a parent image
 FROM node:18.19-alpine
 
-# Set theworking directory in the container to /app
+# Set the working directory in the container to /app
 WORKDIR /app
 
 # Copy package.json and package-lock.json
@@ -14,13 +14,10 @@ RUN if [ "$NODE_ENV" = "production"]; \
     fi
 
 # Copy source code
-COPY . .
+COPY src/ ./src
 
 # Expose the port
 EXPOSE 5003
 
 # define the command to run the app
-CMD if [ "$NODE_ENV" = "production" ]; \
-    then npm run start; \
-    else npm run dev; \
-    fi
+CMD ["npm", "run", "start"]

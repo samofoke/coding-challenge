@@ -1,0 +1,41 @@
+# Dependency directories
+node_modules
+jspm_packages
+
+# Environment files
+.env*
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+
+# Git and version control
+.git
+.gitignore
+.svn
+.cvsignore
+
+# Build output
+dist
+tmp
+out
+build
+
+# Logs
+*.log
+npm-debug.log
+yarn-error.log
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+*.swp
+*.swo
+*.tmp
+*~
+
+Dockerfile
+node_modules
+npm-debug.log
